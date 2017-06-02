@@ -19,8 +19,8 @@ class Graph {
       nodes.foreach { node =>
         if (!visited.contains(node)) {
           visited.add(node)
+          walkNodes(node.getChildren)
         }
-        walkNodes(node.getChildren)
       }
     walkNodes(List(node))
     visited.toList
