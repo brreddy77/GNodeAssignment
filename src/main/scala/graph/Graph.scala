@@ -5,11 +5,25 @@ import graph.node.GNode
 class Graph {
 
   def walkGraph(node: GNode): List[GNode] = {
-    def walkNodes(nodes: Seq[GNode]): List[GNode] =
+    def walkNodes(nodes: List[GNode]): List[GNode] =
       nodes.foldLeft(List.empty[GNode]) { (acc, node) =>
         node :: acc ++ walkNodes(node.getChildren)
       }
     walkNodes(List(node)).distinct
+  }
+
+  // Alternative walkGraph to avoid traversing shared sub-graphs multiple times - uses a mutable collection
+  def altWalkGraph(node: GNode): List[GNode] = {
+    val visited = scala.collection.mutable.Set[GNode]()
+    def walkNodes(nodes: List[GNode]): Unit =
+      nodes.foreach { node =>
+        if (!visited.contains(node)) {
+          visited.add(node)
+        }
+        walkNodes(node.getChildren)
+      }
+    walkNodes(List(node))
+    visited.toList
   }
 
   def paths(node: GNode): List[List[GNode]] = {
@@ -43,8 +57,10 @@ object GraphApp extends App {
     )
 
   val nodes = graph.walkGraph(graphNode)
+  val altNodes = graph.altWalkGraph(graphNode)
   val paths = graph.paths(graphNode)
 
   println(nodes)
+  println(altNodes)
   println(paths)
 }
