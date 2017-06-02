@@ -1,0 +1,13 @@
+.idea_modules/
+.idea/
+**/*.ipr
+**/*.iws
+.classpath
+.project
+.settings/
+.cache-main
+.cache-tests
+**/*.iml
+**/.settings
+.history
+target/
