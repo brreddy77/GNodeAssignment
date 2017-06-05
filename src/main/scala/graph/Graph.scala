@@ -19,10 +19,10 @@ class Graph {
     def walkNodes(nodes: Set[GNode], acc: Set[GNode]): List[GNode] = {
       val collected = acc ++ nodes
       val remaining = nodes.flatMap(_.getChildren).diff(collected)
-      if (remaining.nonEmpty)
-        walkNodes(remaining, collected)
-      else
+      if (remaining.isEmpty)
         collected.toList
+      else
+        walkNodes(remaining, collected)
     }
 
     walkNodes(Set(node), Set.empty[GNode])
