@@ -28,20 +28,6 @@ class Graph {
     walkNodes(Set(node), Set.empty[GNode])
   }
 
-  // Alternative walkGraph with a mutable collection
-  def walkGraphWithMutableCollection(node: GNode): List[GNode] = {
-    val visited = scala.collection.mutable.Set[GNode]()
-    def walkNodes(nodes: List[GNode]): Unit =
-      nodes.foreach { node =>
-        if (!visited.contains(node)) {
-          visited.add(node)
-          walkNodes(node.getChildren)
-        }
-      }
-    walkNodes(List(node))
-    visited.toList
-  }
-
   def paths(node: GNode): List[List[GNode]] = {
     def nodePaths(nodes: List[GNode]): List[List[GNode]] =
       for {
