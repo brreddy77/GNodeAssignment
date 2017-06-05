@@ -2,6 +2,8 @@ package graph
 
 import graph.node.GNode
 
+import scala.annotation.tailrec
+
 class Graph {
 
   def walkGraph(node: GNode): List[GNode] = {
@@ -12,8 +14,22 @@ class Graph {
     walkNodes(List(node)).distinct
   }
 
-  // Alternative walkGraph to avoid traversing shared sub-graphs multiple times - uses a mutable collection
-  def altWalkGraph(node: GNode): List[GNode] = {
+  def walkGraphTailRecursive(node: GNode): List[GNode] = {
+    @tailrec
+    def walkNodes(nodes: Set[GNode], acc: Set[GNode]): List[GNode] = {
+      val collected = acc ++ nodes
+      val remaining = nodes.flatMap(_.getChildren).diff(collected)
+      if (remaining.nonEmpty)
+        walkNodes(remaining, collected)
+      else
+        collected.toList
+    }
+
+    walkNodes(Set(node), Set.empty[GNode])
+  }
+
+  // Alternative walkGraph with a mutable collection
+  def walkGraphWithMutableCollection(node: GNode): List[GNode] = {
     val visited = scala.collection.mutable.Set[GNode]()
     def walkNodes(nodes: List[GNode]): Unit =
       nodes.foreach { node =>
@@ -34,6 +50,22 @@ class Graph {
         nodePath <- if (childPaths.isEmpty) List(Nil) else childPaths
       } yield node :: nodePath
     nodePaths(List(node))
+  }
+
+  def pathsTailRecursive(node: GNode): List[List[GNode]] = {
+    @tailrec
+    def nodePaths(paths: List[List[GNode]]): List[List[GNode]] = {
+      val nextPaths = for {
+        path <- paths
+        tailNode = path.last
+        child <- tailNode.getChildren
+      } yield path :+ child
+      if (nextPaths.isEmpty)
+        paths
+      else
+        nodePaths(nextPaths)
+    }
+    nodePaths(List(List(node)))
   }
 }
 
@@ -57,7 +89,7 @@ object GraphApp extends App {
     )
 
   val nodes = graph.walkGraph(graphNode)
-  val altNodes = graph.altWalkGraph(graphNode)
+  val altNodes = graph.walkGraph(graphNode)
   val paths = graph.paths(graphNode)
 
   println(nodes)
