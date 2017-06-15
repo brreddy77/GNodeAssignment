@@ -42,11 +42,28 @@ class GraphSpec extends FlatSpec with Matchers {
   it should "return all paths for a given graph" in new Fixture {
     val paths = graph.paths(rootNode)
     paths should have size (6)
+    paths.toSet should equal (
+      Set(
+        List(rootNode, node11, node111),
+        List(rootNode, node11, node112),
+        List(rootNode, node11, commonNode),
+        List(rootNode, node12, node121),
+        List(rootNode, node12, node122),
+        List(rootNode, node12, commonNode)
+      )
+    )
   }
 
   it should "return all paths starting from an arbitrary node" in new Fixture {
     val paths = graph.paths(node12)
     paths should have size (3)
+    paths.toSet should equal (
+      Set(
+        List(node12, node121),
+        List(node12, node122),
+        List(node12, commonNode)
+      )
+    )
   }
 
   trait Fixture {

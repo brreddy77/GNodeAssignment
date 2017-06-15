@@ -24,7 +24,6 @@ class Graph {
       else
         walkNodes(remaining, collected)
     }
-
     walkNodes(Set(node), Set.empty[GNode])
   }
 
@@ -75,10 +74,12 @@ object GraphApp extends App {
     )
 
   val nodes = graph.walkGraph(graphNode)
-  val altNodes = graph.walkGraph(graphNode)
+  val altNodes = graph.walkGraphTailRecursive(graphNode)
   val paths = graph.paths(graphNode)
+  val altPaths = graph.pathsTailRecursive(graphNode)
 
   println(nodes)
   println(altNodes)
   println(paths)
+  println(altPaths)
 }
